@@ -35,6 +35,34 @@ namespace RestaurantCuisine
             Assert.Equal(cuisine1, cuisine2);
         }
 
+        [Fact]
+        public void Save_SavesCuisineInDatabase_ReturnNewId()
+        {
+            Cuisine testCuisine = new Cuisine("Italian");
+            testCuisine.Save();
+
+            Cuisine retrievedCuisine = Cuisine.GetAll()[0];
+
+            Assert.Equal(testCuisine, retrievedCuisine);
+        }
+
+        [Fact]
+        public void Find_LocateCuisineInDatabase_ReturnDesiredCuisine()
+        {
+            Cuisine testCuisine = new Cuisine("Italian");
+            testCuisine.Save();
+
+            Cuisine retrievedCuisine = Cuisine.Find(testCuisine.GetId());
+
+            Assert.Equal(testCuisine, retrievedCuisine);
+        }
+        
+        [Fact]
+        public void Test_GetRestaurants_RetrievesAllRestaurantsWithCuisine()
+        {
+
+        }
+
         public void Dispose()
         {
             Cuisine.DeleteAll();
