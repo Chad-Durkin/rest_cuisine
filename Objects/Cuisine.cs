@@ -98,7 +98,35 @@ namespace RestaurantCuisine
 
             DB.CloseSqlConnection(rdr, conn);
             return foundCuisine;
+        }
 
+        public List<Restaurant> GetRestaurants()
+        {
+            List<Restaurant> cuisineRestaurants = new List<Restaurant>{};
+            int cuisineId = this.GetId();
+
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM restaurants WHERE cuisine_id = @CuisineId;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@CuisineId", cuisineId));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+
+            while(rdr.Read())
+            {
+                int foundId = rdr.GetInt32(0);
+                string foundName = rdr.GetString(1);
+                string foundAddress = rdr.GetString(2);
+                string foundPhoneNumber = rdr.GetString(3);
+                cuisineRestaurants.Add(new Restaurant(foundName, foundAddress, foundPhoneNumber, cuisineId, foundId));
+            }
+
+            DB.CloseSqlConnection(rdr, conn);
+
+            return cuisineRestaurants;
         }
 
         public int GetId()

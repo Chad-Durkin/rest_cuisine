@@ -65,22 +65,29 @@ namespace RestaurantCuisine
             Assert.Equal(testCuisine, retrievedCuisine);
         }
 
-        // [Fact]
-        // public void Test_GetRestaurants_RetrievesAllRestaurantsWithCuisine()
-        // {
-        //       // Arrange
-        //     Cuisine testCuisine = new Cuisine("Italian");
-        //     testCuisine.Save();
-        //
-        //     // Act
-        //     Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", testCuisine.GetId());
-        //
-        //     List<Restaurant> testRestaurantList = new List<Restaurant> {firstRestaurant};
-        //     List<Restaurant> resultRestaurantList = testCuisine.GetRestaurants();
-        //
-        //     // Assert
-        //     Assert.Equal(testRestaurantList, resultRestaurantList);
-        // }
+        [Fact]
+        public void Test_GetRestaurants_RetrievesAllRestaurantsWithCuisine()
+        {
+              // Arrange
+            Cuisine testCuisine = new Cuisine("Italian");
+            testCuisine.Save();
+            Cuisine testCuisine2 = new Cuisine("Mexican");
+            testCuisine.Save();
+
+            // Act
+            Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", testCuisine.GetId());
+            Restaurant secondRestaurant = new Restaurant("El Taco Bueno", "7th Street", "530-899-5555", testCuisine2.GetId());
+            Restaurant thirdRestaurant = new Restaurant("Taqueria", "10th Street", "435-899-5555", testCuisine2.GetId());
+            firstRestaurant.Save();
+            secondRestaurant.Save();
+            thirdRestaurant.Save();
+
+            List<Restaurant> testRestaurantList = new List<Restaurant> {firstRestaurant};
+            List<Restaurant> resultRestaurantList = testCuisine.GetRestaurants();
+
+            // Assert
+            Assert.Equal(testRestaurantList, resultRestaurantList);
+        }
 
         public void Dispose()
         {
