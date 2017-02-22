@@ -17,68 +17,68 @@ namespace RestaurantCuisine
         [Fact]
         public void Test_CuisineEmptyAtFirst()
         {
-            //Arrange
+            // Arrange
             int result = Cuisine.GetAll().Count;
 
-            //Act
+            // Act
 
-            //Assert
+            // Assert
             Assert.Equal(0, result);
         }
 
         [Fact]
         public void Test_IdentityTest_ReturnTrueIfCuisinessAreIdentitical()
         {
-             //Arrange, Act
+             // Arrange, Act
             Cuisine cuisine1 = new Cuisine("Italian");
             Cuisine cuisine2 = new Cuisine("Italian");
 
-            //Assert
+            // Assert
             Assert.Equal(cuisine1, cuisine2);
         }
 
         [Fact]
         public void Save_SavesCuisineInDatabase_ReturnNewId()
         {
-            //Arrange
+            // Arrange
             Cuisine testCuisine = new Cuisine("Italian");
             testCuisine.Save();
 
-            //Act
+            // Act
             Cuisine retrievedCuisine = Cuisine.GetAll()[0];
 
-            //Assert
+            // Assert
             Assert.Equal(testCuisine, retrievedCuisine);
         }
 
         [Fact]
         public void Find_LocateCuisineInDatabase_ReturnDesiredCuisine()
         {
-             //Arrange
+             // Arrange
             Cuisine testCuisine = new Cuisine("Italian");
             testCuisine.Save();
 
-            //Act
+            // Act
             Cuisine retrievedCuisine = Cuisine.Find(testCuisine.GetId());
 
-            //Assert
+            // Assert
             Assert.Equal(testCuisine, retrievedCuisine);
         }
 
         // [Fact]
         // public void Test_GetRestaurants_RetrievesAllRestaurantsWithCuisine()
         // {
-        //       //Arrange
+        //       // Arrange
         //     Cuisine testCuisine = new Cuisine("Italian");
         //     testCuisine.Save();
         //
-        //     //Act
+        //     // Act
         //     Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", testCuisine.GetId());
         //
         //     List<Restaurant> testRestaurantList = new List<Restaurant> {firstRestaurant};
         //     List<Restaurant> resultRestaurantList = testCuisine.GetRestaurants();
         //
-        //     //Assert
+        //     // Assert
         //     Assert.Equal(testRestaurantList, resultRestaurantList);
         // }
 

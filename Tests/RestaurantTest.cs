@@ -16,17 +16,17 @@ namespace RestaurantCuisine
         [Fact]
         public void Test_DatabaseEmptyAtFirst()
         {
-            //Arranace, Act
+            // Arranace, Act
             int result = Restaurant.GetAll().Count;
 
-            //Assert
+            // Assert
             Assert.Equal(0, result);
         }
 
         [Fact]
         public void Restaurant_Compare_ReturnTrueIfIdentical()
         {
-            // Arrange Act
+            // Arrange, Act
             Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 0);
             Restaurant secondRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 0);
 
@@ -46,7 +46,20 @@ namespace RestaurantCuisine
 
             // Assert
             Assert.Equal(firstRestaurant, result);
+        }
 
+        [Fact]
+        public void Test_Find_FindsRestaurantInDatabase()
+        {
+            // Arrange
+            Restaurant testRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 0);
+            testRestaurant.Save();
+
+            // Act
+            Restaurant foundRestaurant = Restaurant.Find(testRestaurant.GetId());
+
+            // Assert
+            Assert.Equal(testRestaurant, foundRestaurant);
         }
 
         public void Dispose()

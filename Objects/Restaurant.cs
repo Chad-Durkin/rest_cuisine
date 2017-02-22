@@ -94,6 +94,38 @@ namespace RestaurantCuisine
             DB.CloseSqlConnection(rdr, conn);
         }
 
+        public static Restaurant Find(int id)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM restaurants WHERE id = @RestaurantId;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@RestaurantId", id));
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            int foundId = 0;
+            string foundName = null;
+            string foundAddress = null;
+            string foundPhoneNumber = null;
+            int foundCuisineId = 0;
+
+            while(rdr.Read())
+            {
+                foundId = rdr.GetInt32(0);
+                foundName = rdr.GetString(1);
+                foundAddress = rdr.GetString(2);
+                foundPhoneNumber = rdr.GetString(3);
+                foundCuisineId = rdr.GetInt32(4);
+            }
+
+            Restaurant foundRestaurant = new Restaurant(foundName, foundAddress, foundPhoneNumber, foundCuisineId, foundId);
+
+            DB.CloseSqlConnection(rdr, conn);
+
+            return foundRestaurant;
+        }
+
         public int GetId()
         {
             return _id;
