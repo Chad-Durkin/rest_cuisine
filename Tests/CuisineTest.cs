@@ -89,6 +89,20 @@ namespace RestaurantCuisine
             Assert.Equal(testRestaurantList, resultRestaurantList);
         }
 
+        [Fact]
+        public void Test_UpdateCuisineName()
+        {
+            // Arrange
+            Cuisine testCuisine = new Cuisine("Italian");
+            testCuisine.Save();
+
+            // Act
+            testCuisine.Update("Eastern Italian");
+
+            // Assert
+            Assert.Equal("Eastern Italian", testCuisine.GetName());
+        }
+
         public void Dispose()
         {
             Cuisine.DeleteAll();

@@ -36,6 +36,26 @@ namespace RestaurantCuisine
             return this.GetName().GetHashCode();
         }
 
+        public void Update(string newName)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("UPDATE cuisines SET name = @NewName OUTPUT INSERTED.name WHERE id = @CategoryId;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@NewName", newName));
+            cmd.Parameters.Add(new SqlParameter("@CategoryId", this.GetId()));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+                this._name = rdr.GetString(0);
+            }
+
+            DB.CloseSqlConnection(rdr, conn);
+        }
+
         public static List<Cuisine> GetAll()
         {
             List<Cuisine> allCuisine = new List<Cuisine>{};
