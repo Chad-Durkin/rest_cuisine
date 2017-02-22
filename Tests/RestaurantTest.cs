@@ -23,6 +23,32 @@ namespace RestaurantCuisine
             Assert.Equal(0, result);
         }
 
+        [Fact]
+        public void Restaurant_Compare_ReturnTrueIfIdentical()
+        {
+            // Arrange Act
+            Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 0);
+            Restaurant secondRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 0);
+
+            // Assert
+            Assert.Equal(firstRestaurant, secondRestaurant);
+        }
+
+        [Fact]
+        public void Restaurant_Save_AlterIdOfSavedRestaurant()
+        {
+            // Arrange
+            Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 0);
+            firstRestaurant.Save();
+
+            // Act
+            Restaurant result = Restaurant.GetAll()[0];
+
+            // Assert
+            Assert.Equal(firstRestaurant, result);
+
+        }
+
         public void Dispose()
         {
             Restaurant.DeleteAll();

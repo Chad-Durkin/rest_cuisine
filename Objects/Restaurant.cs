@@ -72,6 +72,28 @@ namespace RestaurantCuisine
             return allRestaurants;
         }
 
+        public void Save()
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("INSERT INTO restaurants (name, address, phone_number, cuisine_id) OUTPUT INSERTED.id VALUES (@Name, @Address, @PhoneNumber, @CuisineId);", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@Name", this.GetName()));
+            cmd.Parameters.Add(new SqlParameter("@Address", this.GetAddress()));
+            cmd.Parameters.Add(new SqlParameter("@PhoneNumber", this.GetPhoneNumber()));
+            cmd.Parameters.Add(new SqlParameter("@CuisineId", this.GetCuisineId()));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                this._id = rdr.GetInt32(0);
+            }
+
+            DB.CloseSqlConnection(rdr, conn);
+        }
+
         public int GetId()
         {
             return _id;
