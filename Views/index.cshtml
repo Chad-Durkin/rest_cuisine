@@ -2,24 +2,21 @@
     Layout = "Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <a href="/cuisine/form">Add a Cuisine</a>
-        <a href="/restaurant/form">Add a Restaurant</a>
-    </div>
-    <div class="col-md-6">
-        @if(@Model.Count == 0)
-        {
-            <h2>No Cuisines have been added</h2>
-        }
-        else
-        {
-            <h1>Cuisines</h1>
-            @foreach(var cuisine in Model)
-            {
-                <h2><a href="/cuisine/@cuisine.GetId()">@cuisine.GetName()</a></h2>
-                <h3>Restaurants: @cuisine.GetRestaurants().Count</h3>
-            }
-        }
-    </div>
-</div>
+@if(@Model.Count == 0)
+{
+    <h2>No Cuisines have been added</h2>
+}
+else
+{
+    <h1>Cuisines</h1>
+    @foreach(var cuisine in Model)
+    {
+        <h2><a href="/cuisine/@cuisine.GetId()">@cuisine.GetName()</a></h2>
+        <h3>Restaurants: @cuisine.GetRestaurants().Count</h3>
+        <div class="edit-button-holder">
+            <form class="form-group" action="/delete/cuisine/@cuisine.GetId()" method="post">
+                <button type="submit" name="button">Delete</button>
+            </form>
+        </div>
+    }
+}

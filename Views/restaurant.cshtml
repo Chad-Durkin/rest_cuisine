@@ -1,0 +1,27 @@
+@{
+    Layout = "Shared/_Layout.cshtml";
+}
+
+<h1>@Model["restaurant"].GetName()</h1>
+
+@if(@Model["reviews"].Count == 0)
+{
+    <h1>No Reviews</h1>
+}
+else
+{
+    <h2>Reviews..</h2>
+
+    @foreach(var review in @Model["reviews"])
+    {
+        <li>Stars: @review.GetStars() @review.GetReview()</li>
+    }
+}
+
+<form action="/review/restaurant/@Model["restaurant"].GetId()" method="post">
+    <label for="review">Add A Review</label>
+    <input type="text" name="review" placeholder="Enter a review here..">
+    <label for="stars">Add a rating from 1-5</label>
+    <input type="number" name="stars" min="1" max="5">
+    <button type="submit" name="submit-review-button">Add Review</button>
+</form>

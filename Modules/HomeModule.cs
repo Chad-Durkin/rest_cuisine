@@ -26,7 +26,8 @@ namespace RestaurantCuisine
             Post["/cuisines"] = _ => {
                 Cuisine newCuisine = new Cuisine(Request.Form["cuisine"]);
                 newCuisine.Save();
-                return View["index.cshtml", newCuisine];
+                List<Cuisine> allCuisines = Cuisine.GetAll();
+                return View["index.cshtml", allCuisines];
             };
             Get["/restaurants"] = _ => {
                 List<Cuisine> allCuisines = Cuisine.GetAll();
@@ -61,6 +62,39 @@ namespace RestaurantCuisine
             {
                 Cuisine newCuisine = Cuisine.Find(parameters.id);
                 return View["cuisine.cshtml", newCuisine];
+            };
+            Post["/delete/cuisine/{id}"] = parameters =>
+            {
+                Cuisine targetCuisine = Cuisine.Find(parameters.id);
+                targetCuisine.DeleteCuisineAndRestaurants();
+                return View["index.cshtml", Cuisine.GetAll()];
+            };
+            Post["/delete/restaurant/{id}"] = parameters =>
+            {
+                Restaurant targetRestaurant = Restaurant.Find(parameters.id);
+                int cuisineId = targetRestaurant.GetCuisineId();
+                Restaurant.Delete(parameters.id);
+                return View["cuisine.cshtml", Cuisine.Find(cuisineId)];
+            };
+            Get["/review/restaurant/{id}"] = parameters =>
+            {
+                Dictionary<string, object> model = new Dictionary<string, object> {};
+                Restaurant targetRestaurant = Restaurant.Find(parameters.id);
+                List<Review> allReviews = Review.FindAll(parameters.id);
+                model.Add("restaurant", targetRestaurant);
+                model.Add("reviews", allReviews);
+                return View["restaurant.cshtml", model];
+            };
+            Post["/review/restaurant/{id}"] = parameters =>
+            {
+                Review newReview = new Review(Request.Form["review"], Request.Form["stars"], parameters.id);
+                newReview.Save();
+                Dictionary<string, object> model = new Dictionary<string, object> {};
+                Restaurant targetRestaurant = Restaurant.Find(parameters.id);
+                List<Review> allReviews = Review.FindAll(parameters.id);
+                model.Add("restaurant", targetRestaurant);
+                model.Add("reviews", allReviews);
+                return View["restaurant.cshtml", model];
             };
         }
     }
