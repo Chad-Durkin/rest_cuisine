@@ -141,7 +141,7 @@ namespace RestaurantCuisine
 
 
             // Act
-            testCuisine.Delete();
+            testCuisine.DeleteCuisineAndRestaurants();
             List<Cuisine> cuisineResultList = Cuisine.GetAll();
             List<Restaurant> restaurantResultList = Restaurant.GetAll();
 

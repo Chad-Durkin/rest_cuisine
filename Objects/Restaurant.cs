@@ -207,7 +207,7 @@ namespace RestaurantCuisine
             SqlConnection conn = DB.Connection();
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand("DELETE FROM restaurants WHERE id = @RestaurantsId;", conn);
+            SqlCommand cmd = new SqlCommand("DELETE FROM restaurants WHERE id = @RestaurantsId; DELETE FROM reviews WHERE restaurant_id = @RestaurantsId", conn);
 
             cmd.Parameters.Add(new SqlParameter("@RestaurantsId", id));
             cmd.ExecuteNonQuery();

@@ -149,6 +149,23 @@ namespace RestaurantCuisine
             return foundCuisine;
         }
 
+        public static int FindCuisineByName(string cuisineName)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM cuisines WHERE name = @CuisineName;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@CuisineId", cuisineName));
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            int foundId = rdr.GetInt32(0);
+
+            DB.CloseSqlConnection(rdr, conn);
+            
+            return foundId;
+        }
+
         public List<Restaurant> GetRestaurants()
         {
             List<Restaurant> cuisineRestaurants = new List<Restaurant>{};
@@ -178,7 +195,7 @@ namespace RestaurantCuisine
             return cuisineRestaurants;
         }
 
-        public void Delete()
+        public void DeleteCuisineAndRestaurants()
         {
             SqlConnection conn = DB.Connection();
             conn.Open();
