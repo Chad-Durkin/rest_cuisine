@@ -53,7 +53,7 @@ namespace RestaurantCuisine
         {
             // Arrange
             Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 0);
-            Restaurant secondRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 0);
+            Restaurant secondRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 2);
             Restaurant thirdRestaurant = new Restaurant("DoughBoys", "5th Street", "530-816-9999", 0);
             firstRestaurant.Save();
             secondRestaurant.Save();
@@ -156,6 +156,26 @@ namespace RestaurantCuisine
 
             // Assert
             Assert.Equal(restaurantTestList, restaurantResultList);
+        }
+        [Fact]
+        public void Restaurant_IsDuplicate_ReturnsNegativeOneIfDupe()
+        {
+            // Arrange
+            Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 5);
+            firstRestaurant.Save();
+            Restaurant secondRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", 4);
+
+            List<Restaurant> testList = new List<Restaurant>{firstRestaurant, secondRestaurant};
+
+            // Act
+            int result = secondRestaurant.IsNewRestaurant();
+            if (result == -1)
+            {
+                secondRestaurant.Save();
+            }
+
+            // Assert
+            Assert.Equal(testList, Restaurant.GetAll());
         }
         [Fact]
         public void Restaurant_Save_DoesntSaveExactDuplicates()

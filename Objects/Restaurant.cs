@@ -75,61 +75,56 @@ namespace RestaurantCuisine
 
         public void Save()
         {
+            if (this.IsNewRestaurant() == -1)
+            {
+                SqlConnection conn = DB.Connection();
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand("INSERT INTO restaurants (name, address, phone_number, cuisine_id) OUTPUT INSERTED.id VALUES (@Name, @Address, @PhoneNumber, @CuisineId);", conn);
+
+                cmd.Parameters.Add(new SqlParameter("@Name", this.GetName()));
+                cmd.Parameters.Add(new SqlParameter("@Address", this.GetAddress()));
+                cmd.Parameters.Add(new SqlParameter("@PhoneNumber", this.GetPhoneNumber()));
+                cmd.Parameters.Add(new SqlParameter("@CuisineId", this.GetCuisineId()));
+
+                SqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    this._id = rdr.GetInt32(0);
+                }
+
+                DB.CloseSqlConnection(rdr, conn);
+            }
+        }
+
+        public int IsNewRestaurant()
+        { // Returns -1 if the Restaurant object is unique and not in the database, otherwise returns the id of the identical entry
+            int result;
+
             SqlConnection conn = DB.Connection();
             conn.Open();
+            SqlCommand cmd = new SqlCommand("SELECT * FROM restaurants WHERE name = @TargetName AND address = @Address AND phone_number = @PhoneNumber AND cuisine_id = @CuisineId;", conn);
 
-            SqlCommand cmd = new SqlCommand("INSERT INTO restaurants (name, address, phone_number, cuisine_id) OUTPUT INSERTED.id VALUES (@Name, @Address, @PhoneNumber, @CuisineId);", conn);
-
-            cmd.Parameters.Add(new SqlParameter("@Name", this.GetName()));
+            cmd.Parameters.Add(new SqlParameter("@TargetName", this.GetName()));
             cmd.Parameters.Add(new SqlParameter("@Address", this.GetAddress()));
             cmd.Parameters.Add(new SqlParameter("@PhoneNumber", this.GetPhoneNumber()));
             cmd.Parameters.Add(new SqlParameter("@CuisineId", this.GetCuisineId()));
 
             SqlDataReader rdr = cmd.ExecuteReader();
 
-            while (rdr.Read())
+            if (rdr.Read())
             {
-                this._id = rdr.GetInt32(0);
+                result = rdr.GetInt32(0);
+            }
+            else
+            {
+                result = -1;
             }
 
             DB.CloseSqlConnection(rdr, conn);
+            return result;
         }
-
-        // public static int IsNewRestaurant(string targetName)
-        // {
-        //     List<Restaurant> allFound = new List<Restaurant> {};
-        //     int result;
-        //
-        //     SqlConnection conn = DB.Connection();
-        //     conn.Open();
-        //     SqlCommand cmd = new SqlCommand("SELECT * FROM restaurants WHERE name = @TargetName;", conn);
-        //     cmd.Parameters.Add(new SqlParameter("@TargetName", targetName));
-        //     SqlDataReader rdr = cmd.ExecuteReader();
-        //
-        //
-        //     while(rdr.Read())
-        //     {
-        //         int restaurantId = 0;
-        //         string restaurantName = rdr.GetString(1);
-        //         string restaurantAddress = rdr.GetString(2);
-        //         string restaurantPhoneNumber = rdr.GetString(3);
-        //         int restaurantCuisineId = rdr.GetInt32(4);
-        //         Restaurant newRestaurant = new Restaurant(restaurantName, restaurantAddress, restaurantPhoneNumber, restaurantCuisineId, restaurantId);
-        //         allFound.Add(newRestaurant);
-        //     }
-        //
-        //     if (rdr.Read())
-        //     {
-        //         result = rdr.GetInt32(0);
-        //     }
-        //     else
-        //     {
-        //         result = -1;
-        //     }
-        //
-        //     DB.CloseSqlConnection(rdr, conn);
-        //     return result;
-        // }
 
         public static Restaurant Find(int id)
         {
