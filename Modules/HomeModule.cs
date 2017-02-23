@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Nancy;
 using Nancy.ViewEngines.Razor;
 
-namespace RestuarantCuisine
+namespace RestaurantCuisine
 {
     public class HomeModule : NancyModule
     {
@@ -56,6 +56,11 @@ namespace RestuarantCuisine
 
                 List<Cuisine> allCuisines = Cuisine.GetAll();
                 return View["index.cshtml", allCuisines];
+            };
+            Get["/cuisine/{id}"] = parameters =>
+            {
+                Cuisine newCuisine = Cuisine.Find(parameters.id);
+                return View["cuisine.cshtml", newCuisine];
             };
         }
     }

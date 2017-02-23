@@ -1,0 +1,17 @@
+@{
+    Layout = "Shared/_Layout.cshtml";
+}
+
+<div class="row cuisine-holder">
+    <div class="jumbotron">
+        <h1>@Model.GetName()</h1>
+    </div>
+    @foreach(var entry in Model.GetRestaurants())
+    {
+        <h3>@entry.GetName()</h3>
+        <ul>
+            <li>Address: @entry.GetAddress()</li>
+            <li>Phone: @entry.GetPhoneNumber()</li>
+        </ul>
+    }
+</div>
