@@ -36,6 +36,32 @@ namespace RestaurantCuisine
             return this.GetName().GetHashCode();
         }
 
+        public static int IsNewCuisine(string targetName)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM cuisines WHERE name = @TargetName;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@TargetName", targetName));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            int result;
+
+            if (rdr.Read())
+            {
+                result = rdr.GetInt32(0);
+            }
+            else
+            {
+                result = -1;
+            }
+
+            DB.CloseSqlConnection(rdr, conn);
+            return result;
+        }
+
         public void Update(string newName)
         {
             SqlConnection conn = DB.Connection();
@@ -81,19 +107,22 @@ namespace RestaurantCuisine
 
         public void Save()
         {
-            SqlConnection conn = DB.Connection();
-            conn.Open();
-
-            SqlCommand cmd = new SqlCommand("INSERT INTO cuisines (name) OUTPUT INSERTED.id VALUES (@CuisineName);", conn);
-
-            cmd.Parameters.Add(new SqlParameter("@CuisineName", this.GetName()));
-            SqlDataReader rdr = cmd.ExecuteReader();
-
-            while(rdr.Read())
+            if (IsNewCuisine(this.GetName()) == -1)
             {
-                this._id = rdr.GetInt32(0);
+                SqlConnection conn = DB.Connection();
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand("INSERT INTO cuisines (name) OUTPUT INSERTED.id VALUES (@CuisineName);", conn);
+
+                cmd.Parameters.Add(new SqlParameter("@CuisineName", this.GetName()));
+                SqlDataReader rdr = cmd.ExecuteReader();
+
+                while(rdr.Read())
+                {
+                    this._id = rdr.GetInt32(0);
+                }
+                DB.CloseSqlConnection(rdr, conn);
             }
-            DB.CloseSqlConnection(rdr, conn);
         }
 
         public static Cuisine Find(int targetId)
@@ -147,6 +176,23 @@ namespace RestaurantCuisine
             DB.CloseSqlConnection(rdr, conn);
 
             return cuisineRestaurants;
+        }
+
+        public void Delete()
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("DELETE FROM cuisines WHERE id = @TargetId; DELETE FROM restaurants WHERE cuisine_id = @TargetId;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@TargetId", this.GetId()));
+
+            cmd.ExecuteNonQuery();
+
+            if (conn != null)
+            {
+                conn.Close();
+            }
         }
 
         public int GetId()

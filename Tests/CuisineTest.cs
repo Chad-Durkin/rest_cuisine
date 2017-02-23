@@ -52,6 +52,23 @@ namespace RestaurantCuisine
         }
 
         [Fact]
+        public void Save_PreventsDuplicate_ListOfOne()
+        {
+            // Arrange
+            Cuisine cuisine1 = new Cuisine("Italian");
+            Cuisine cuisine2 = new Cuisine("Italian");
+            List<Cuisine> testList = new List<Cuisine> {cuisine1};
+
+            // Act
+            cuisine1.Save();
+            cuisine2.Save();
+
+            // Assert
+            Assert.Equal(testList.Count, Cuisine.GetAll().Count);
+
+        }
+
+        [Fact]
         public void Find_LocateCuisineInDatabase_ReturnDesiredCuisine()
         {
              // Arrange
@@ -103,9 +120,40 @@ namespace RestaurantCuisine
             Assert.Equal("Eastern Italian", testCuisine.GetName());
         }
 
+        [Fact]
+        public void Cuisine_Delete_RemoveCuisineFromDatabase()
+        {
+            // Arrange
+            Cuisine testCuisine = new Cuisine("Italian");
+            testCuisine.Save();
+            Cuisine testCuisine2 = new Cuisine("Mexican");
+            testCuisine2.Save();
+
+            Restaurant firstRestaurant = new Restaurant("Pizza Factory", "5th Street", "530-816-9999", testCuisine.GetId());
+            Restaurant secondRestaurant = new Restaurant("El Taco Bueno", "7th Street", "530-899-5555", testCuisine2.GetId());
+            Restaurant thirdRestaurant = new Restaurant("Taqueria", "10th Street", "435-899-5555", testCuisine2.GetId());
+            firstRestaurant.Save();
+            secondRestaurant.Save();
+            thirdRestaurant.Save();
+
+            List<Cuisine> cuisineTestList = new List<Cuisine> {testCuisine2};
+            List<Restaurant> restaurantTestList = new List<Restaurant> {secondRestaurant, thirdRestaurant};
+
+
+            // Act
+            testCuisine.Delete();
+            List<Cuisine> cuisineResultList = Cuisine.GetAll();
+            List<Restaurant> restaurantResultList = Restaurant.GetAll();
+
+            // Assert
+            Assert.Equal(cuisineTestList[0].GetName(), cuisineResultList[0].GetName());
+            Assert.Equal(restaurantTestList, restaurantResultList);
+        }
+
         public void Dispose()
         {
             Cuisine.DeleteAll();
+            Restaurant.DeleteAll();
         }
     }
 }

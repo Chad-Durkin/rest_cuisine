@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace RestaurantCuisine
 {
@@ -30,6 +31,25 @@ namespace RestaurantCuisine
             SqlCommand cmd = new SqlCommand("DELETE FROM " + tableName + ";", conn);
             cmd.ExecuteNonQuery();
             conn.Close();
+        }
+
+        public static void Delete(string passedTable, string idType, int targetId)
+        {
+            SqlConnection conn = Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("DELETE FROM @TableParameter WHERE @IdType = @TargetId;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@TableParameter", passedTable));
+            cmd.Parameters.Add(new SqlParameter("@IdType", idType));
+            cmd.Parameters.Add(new SqlParameter("@TargetId", targetId));
+
+            cmd.ExecuteNonQuery();
+
+            if (conn != null)
+            {
+                conn.Close();
+            }
         }
     }
 }

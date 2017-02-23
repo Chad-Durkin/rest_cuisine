@@ -126,6 +126,98 @@ namespace RestaurantCuisine
             return foundRestaurant;
         }
 
+        public void Update(string name, string address, string phoneNumber, string updateCuisine = null)
+        {
+            int targetId = this.GetId();
+            int updateCuisineId = this.GetCuisineId();
+
+            // Check if the cuisine exists and is new
+            if (updateCuisine != null)
+            {
+                int possibleId = Cuisine.IsNewCuisine(updateCuisine);
+                if (possibleId == -1)
+                {
+                    Cuisine newCuisine = new Cuisine(updateCuisine);
+                    newCuisine.Save();
+                    updateCuisineId = newCuisine.GetId();
+                }
+                else
+                {
+                    updateCuisineId = possibleId;
+                }
+            }
+
+            // SQL PORTION
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("UPDATE restaurants SET name = @Name, address = @Address, phone_number = @PhoneNumber, cuisine_id = @CuisineId WHERE id = @TargetId;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@Name", name));
+            cmd.Parameters.Add(new SqlParameter("@Address", address));
+            cmd.Parameters.Add(new SqlParameter("@PhoneNumber", phoneNumber));
+            cmd.Parameters.Add(new SqlParameter("@CuisineId", updateCuisineId));
+            cmd.Parameters.Add(new SqlParameter("@TargetId", targetId));
+
+            cmd.ExecuteNonQuery();
+
+            Restaurant updatedRestaurant = Restaurant.Find(targetId);
+            this._name = updatedRestaurant.GetName();
+            this._address = updatedRestaurant.GetAddress();
+            this._phoneNumber = updatedRestaurant.GetPhoneNumber();
+
+            if (conn != null)
+            {
+                conn.Close();
+            }
+        }
+
+        public static List<Restaurant> SearchByName(string searchName)
+        {
+            List<Restaurant> allFound = new List<Restaurant> {};
+
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM restaurants WHERE name LIKE @SearchName;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@SearchName", "%" + searchName + "%"));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+
+            while(rdr.Read())
+            {
+                int restaurantId = rdr.GetInt32(0);
+                string restaurantName = rdr.GetString(1);
+                string restaurantAddress = rdr.GetString(2);
+                string restaurantPhoneNumber = rdr.GetString(3);
+                int restaurantCuisineId = rdr.GetInt32(4);
+                Restaurant newRestaurant = new Restaurant(restaurantName, restaurantAddress, restaurantPhoneNumber, restaurantCuisineId, restaurantId);
+                allFound.Add(newRestaurant);
+            }
+
+            DB.CloseSqlConnection(rdr, conn);
+
+            return allFound;
+        }
+
+        public static void Delete(int id)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("DELETE FROM restaurants WHERE id = @RestaurantsId;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@RestaurantsId", id));
+            cmd.ExecuteNonQuery();
+
+            if(conn != null)
+            {
+                conn.Close();
+            }
+        }
+
         public int GetId()
         {
             return _id;
