@@ -9,7 +9,7 @@
     <div class="edit-cuisine-holder">
         <form class="form-group" action="/update/cuisine/@Model.GetId()" method="post">
             <input type="text" name="updated-name" placeholder="Rename this cuisine...">
-            <button class="btn"type="submit" name="button">Save Changes</button>
+            <button class="btn" type="submit" name="button">Save Changes</button>
         </form>
     </div>
     @foreach(var entry in Model.GetRestaurants())

@@ -96,7 +96,7 @@ namespace RestaurantCuisine
                 model.Add("reviews", allReviews);
                 return View["restaurant.cshtml", model];
             };
-            Patch["/update/cuisine/{id}"] = parameters =>
+            Post["/update/cuisine/{id}"] = parameters =>
             {
                 Cuisine updatedCuisine = Cuisine.Find(parameters.id);
                 updatedCuisine.Update(Request.Form["updated-name"]);

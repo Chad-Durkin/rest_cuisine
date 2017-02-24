@@ -3,12 +3,18 @@
     margin-top: 0px;
 }
 
+.title-text {
+    font-family: monospace;
+}
+
 .header {
     background-color: #ffff98;
 }
 
 body {
-    background-color: grey;
+    background-image: linear-gradient(45deg, #ffff98, #c6c677);
+    background-repeat: none;
+    background-size: cover;
 }
 
 .basic-link {
