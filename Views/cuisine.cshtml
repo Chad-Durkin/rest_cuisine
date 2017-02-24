@@ -6,6 +6,12 @@
     <div class="jumbotron">
         <h1>@Model.GetName()</h1>
     </div>
+    <div class="edit-cuisine-holder">
+        <form class="form-group" action="/update/cuisine/@Model.GetId()" method="post">
+            <input type="text" name="updated-name" placeholder="Rename this cuisine...">
+            <button class="btn"type="submit" name="button">Save Changes</button>
+        </form>
+    </div>
     @foreach(var entry in Model.GetRestaurants())
     {
         <h3>@entry.GetName()</h3>
@@ -15,12 +21,12 @@
         </ul>
         <div class="edit-button-holder">
             <form class="form-group" action="/review/restaurant/@entry.GetId()" method="get">
-                <button type="submit" name="button">Review</button>
+                <button class="btn"type="submit" name="button">Review</button>
             </form>
         </div>
         <div class="edit-button-holder">
             <form class="form-group" action="/delete/restaurant/@entry.GetId()" method="post">
-                <button type="submit" name="button">Delete</button>
+                <button class="btn"type="submit" name="button">Delete</button>
             </form>
         </div>
     }

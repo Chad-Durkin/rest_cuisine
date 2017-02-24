@@ -2,11 +2,13 @@
     Layout = "Shared/_Layout.cshtml";
 }
 
-<form action="/restaurants" method="post">
-    <label for="restaurant-name">Add Restaurant:</label>
-    <input type="text" name="restaurant-name" placeholder="Restaurant's Name">
-    <input type="text" name="restaurant-address" placeholder="Restaurant's Address">
-    <input type="text" name="restaurant-phonenumber" placeholder="Restaurant's Phone Number">
-    <input type="text" name="restaurant-cuisine" placeholder="Restaurant's Cuisine">
-    <button type="submit" name="button">Add Cuisine</button>
-</form>
+<div class="card salmon x-padding">
+    <form action="/restaurants" method="post">
+        <h5>Create a Restaurant</h5>
+        <input type="text" name="restaurant-name" placeholder="Restaurant's Name">
+        <input type="text" name="restaurant-address" placeholder="Restaurant's Address">
+        <input type="text" name="restaurant-phonenumber" placeholder="Restaurant's Phone Number">
+        <input type="text" name="restaurant-cuisine" placeholder="Restaurant's Cuisine">
+        <button class="btn blue" type="submit" name="button">Add Restaurant</button>
+    </form>
+</div>
